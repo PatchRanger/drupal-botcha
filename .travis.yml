@@ -9,8 +9,8 @@ mysql:
 
 # This is for make code abstract, facilitating copy-pasting.
 env:
-  - GITHUB_REPOSITORY=drupal-botcha DRUPAL_VERSION=7.x DRUPAL_MODULE=botcha
-  - GITHUB_REPOSITORY=drupal-botcha DRUPAL_VERSION=6.x DRUPAL_MODULE=botcha
+  - GITHUB_REPOSITORY=drupal-botcha DRUPAL_VERSION=7.x PROFILE=standard DRUPAL_MODULE=botcha
+  - GITHUB_REPOSITORY=drupal-botcha DRUPAL_VERSION=6.x PROFILE=default DRUPAL_MODULE=botcha
 
 before_script:
  - mysql -e 'create database drupal;'
@@ -33,7 +33,7 @@ before_script:
  # make sure we are inside Drupal root.
  - ls -la
  # Install Drupal.
- - drush si standard --db-url=mysql://root:@localhost/drupal --yes
+ - drush si $PROFILE --db-url=mysql://root:@localhost/drupal --yes
  - drush en simpletest --yes
  # Prepare required modules.
  - drush dl libraries --dev --no-cache
