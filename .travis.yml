@@ -41,7 +41,7 @@ before_script:
  - mkdir sites/all/libraries
  - cp -R ../patchwork sites/all/libraries/patchwork
  # Prepare required modules.
- - cp ../$DRUPAL_VERSION/$DRUPAL_MODULE.make $DRUPAL_MODULE.make
+ - cp ../$GITHUB_REPOSITORY/$DRUPAL_VERSION/$DRUPAL_MODULE.make $DRUPAL_MODULE.make
  - drush make $DRUPAL_MODULE.make . --no-core
  #- drush dl libraries --dev --no-cache
  - drush en libraries --yes
