@@ -52,7 +52,7 @@ before_script:
  #- drush dl $DRUPAL_MODULE --dev --no-cache
  #- cp -R ../$DRUPAL_MODULE sites/all/modules/$DRUPAL_MODULE
  # Download major-version-independent "library".
- #- drush make sites/all/modules/$DRUPAL_MODULE/$DRUPAL_MODULE.make . --no-core
+ - drush make sites/all/modules/$DRUPAL_MODULE/$DRUPAL_MODULE.make . --no-core
  # For debugging: check which versions we use.
  # @todo Avoid hardcode.
  - drush pm-info libraries moopapi botcha_base $DRUPAL_MODULE
