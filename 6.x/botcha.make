@@ -12,12 +12,12 @@ api = 2
 ; Download via git, because we don't want to wait while drupal.org builds a package.
 libraries[moopapi][type] = module
 libraries[moopapi][download][type] = git
-libraries[moopapi][download][branch] = x.x-1.x
+libraries[moopapi][download][branch] = 1.x-dev
 libraries[moopapi][destination] = modules
 
 libraries[botcha][type] = module
 libraries[botcha][download][type] = git
-libraries[botcha][download][branch] = x.x-1.x
+libraries[botcha][download][branch] = 4.x-dev
 libraries[botcha][destination] = modules
 
 ; Dependencies.
