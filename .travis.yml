@@ -47,10 +47,9 @@ before_script:
  # Download major-version-independent "library".
  - drush make sites/all/modules/$DRUPAL_MODULE/$DRUPAL_MODULE.make . --no-core
  # For debugging: check which versions we use.
- - drush pm-info libraries moopapi
+ # @todo Avoid hardcode.
+ - drush pm-info libraries moopapi botcha_base $DRUPAL_MODULE
  - drush en $DRUPAL_MODULE --yes
- # For debugging: check which versions we use.
- - drush pm-info $DRUPAL_MODULE
  - drush cc all
  - drush runserver --server=builtin 8080 &
  - sleep 4
