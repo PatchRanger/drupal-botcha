@@ -43,7 +43,9 @@ before_script:
  - ls sites/all/libraries/patchwork -la
  - drush dl moopapi --dev --no-cache
  - drush en moopapi --yes
- - drush dl $DRUPAL_MODULE --dev --no-cache
+ # Prefer "git clone" to "drush dl", because drupal.org builds packages too slowly.
+ #- drush dl $DRUPAL_MODULE --dev --no-cache
+ - git clone --branch $DRUPAL_VERSION-4.x http://git.drupal.org/project/$DRUPAL_MODULE.git
  # Download major-version-independent "library".
  - drush make sites/all/modules/$DRUPAL_MODULE/$DRUPAL_MODULE.make . --no-core
  # For debugging: check which versions we use.
