@@ -53,6 +53,7 @@ before_script:
  #- drush vset simpletest_verbose FALSE --yes
  - drush vset simpletest_verbose TRUE --yes
 
-# @todo Implement Selenium tests launch.
-script: php scripts/run-tests.sh --php ~/.phpenv/versions/5.4.13/bin/php --url 'http://127.0.0.1:8080' --verbose --file sites/all/modules/$DRUPAL_MODULE_base/tests/$DRUPAL_MODULE.simpletest.test
+ # @todo Implement Selenium tests launch.
+ # @todo Use variables instead of hardcode.
+script: php scripts/run-tests.sh --php ~/.phpenv/versions/5.4.13/bin/php --url 'http://127.0.0.1:8080' --verbose --file sites/all/modules/botcha_base/tests/$DRUPAL_MODULE.simpletest.test
  #drush test-run --xml --file=sites/all/modules/moopapi/core/simpletest.test --uri=http://127.0.0.1:8080
