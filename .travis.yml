@@ -42,6 +42,7 @@ before_script:
  - cp -R ../patchwork sites/all/libraries/patchwork
  - ls sites/all/libraries/patchwork -la
  - drush dl moopapi --dev --no-cache
+ - drush en moopapi --yes
  - drush dl $DRUPAL_MODULE --dev --no-cache
  # Download major-version-independent "library".
  - drush make sites/all/modules/$DRUPAL_MODULE/$DRUPAL_MODULE.make . --no-core
