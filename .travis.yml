@@ -33,7 +33,7 @@ before_script:
  - mkdir drupal
  - cd drupal
  - cp ../$GITHUB_REPOSITORY/$DRUPAL_VERSION/drupal.make drupal.make
- - drush make drupal.make . --no-core
+ - drush make drupal.make .
  # Discover newly downloaded directories.
  - ls -la
  #- cd drupal-*
