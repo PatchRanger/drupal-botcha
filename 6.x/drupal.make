@@ -9,5 +9,9 @@ core = 6.x
 ; drush make uses API version `2`.
 api = 2
 
+; Core.
+projects[drupal][type] = core
+
+; Contributed modules.
 projects[simpletest][overwrite] = TRUE
 projects[simpletest][version] = 2.x-dev
