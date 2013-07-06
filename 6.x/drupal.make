@@ -18,5 +18,5 @@ projects[simpletest][overwrite] = TRUE
 projects[simpletest][version] = 2.x-dev
 
 ; Patches.
-projects[drupal][patch] = "http://drupalcode.org/project/simpletest.git/blob_plain/refs/heads/6.x-2.x:/D6-core-simpletest.patch"
-projects[drupal][patch] = "http://drupal.org/files/issues/simpletest_drupal.js_.patch"
+projects[drupal][patch][] = "http://drupalcode.org/project/simpletest.git/blob_plain/refs/heads/6.x-2.x:/D6-core-simpletest.patch"
+projects[drupal][patch][] = "http://drupal.org/files/issues/simpletest_drupal.js_.patch"
