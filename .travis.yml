@@ -28,12 +28,17 @@ before_script:
  # Prefer "git clone" to "drush dl", because drupal.org builds packages too slowly.
  #- git clone --branch $DRUPAL_VERSION-4.x http://git.drupal.org/project/$DRUPAL_MODULE.git
  # --no-cache is must-have due to http://drupal.org/node/1630220
- - drush dl drupal-$DRUPAL_VERSION --no-cache
- # Discover newly downloaded directory.
+ #- drush dl drupal-$DRUPAL_VERSION --no-cache
+ # Prepare Drupal.
+ - mkdir drupal
+ - cd drupal
+ - cp ../$GITHUB_REPOSITORY/$DRUPAL_VERSION/drupal.make drupal.make
+ - drush make drupal.make . --no-core
+ # Discover newly downloaded directories.
  - ls -la
- - cd drupal-*
+ #- cd drupal-*
  # make sure we are inside Drupal root.
- - ls -la
+ #- ls -la
  # Install Drupal.
  - drush si $PROFILE --db-url=mysql://root:@localhost/drupal --yes
  - drush en simpletest --yes
