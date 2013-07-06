@@ -73,8 +73,9 @@ before_script:
  # @todo Implement Selenium tests launch.
  # @todo Use variables instead of hardcode.
 script: #php scripts/run-tests.sh --php ~/.phpenv/versions/5.4.16/bin/php --url 'http://127.0.0.1:8080' --verbose --file sites/all/modules/botcha_base/tests/$DRUPAL_MODULE.simpletest.test
- drush test-run BOTCHA --xml=results --uri=http://127.0.0.1:8080
+ drush test-run SimpleTest --xml=results --uri=http://127.0.0.1:8080
 
 after_script:
  - cd results
  - ls -la
+# Test Simpletest
