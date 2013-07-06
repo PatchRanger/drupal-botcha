@@ -20,5 +20,3 @@ projects[simpletest][version] = 2.x-dev
 ; Patches.
 projects[drupal][patch][] = "http://drupalcode.org/project/simpletest.git/blob_plain/refs/heads/6.x-2.x:/D6-core-simpletest.patch"
 projects[drupal][patch][] = "http://drupal.org/files/issues/simpletest_drupal.js_.patch"
-; Issue #943572.
-projects[simpletest][patch][] = "http://drupal.org/files/issues/simpletest.verbose.0.patch"
