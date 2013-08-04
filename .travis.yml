@@ -10,22 +10,22 @@ mysql:
 env:
   # 6.x
   # 6.x-1.x
-  - GITHUB_REPOSITORY=drupal-moopapi DRUPAL_VERSION=6.x PROFILE=default DRUPAL_MODULE=moopapi BRANCH=1.x
+  - GITHUB_REPOSITORY=drupal-botcha DRUPAL_VERSION=6.x PROFILE=default DRUPAL_MODULE=botcha BRANCH=1.x
   # (obsolete) 6.x-2.x
-  #- GITHUB_REPOSITORY=drupal-moopapi DRUPAL_VERSION=6.x PROFILE=default DRUPAL_MODULE=moopapi BRANCH=2.x
+  #- GITHUB_REPOSITORY=drupal-botcha DRUPAL_VERSION=6.x PROFILE=default DRUPAL_MODULE=botcha BRANCH=2.x
   # 6.x-3.x
-  - GITHUB_REPOSITORY=drupal-moopapi DRUPAL_VERSION=6.x PROFILE=default DRUPAL_MODULE=moopapi BRANCH=3.x
+  - GITHUB_REPOSITORY=drupal-botcha DRUPAL_VERSION=6.x PROFILE=default DRUPAL_MODULE=botcha BRANCH=3.x
   # 6.x-4.x
-  - GITHUB_REPOSITORY=drupal-moopapi DRUPAL_VERSION=6.x PROFILE=default DRUPAL_MODULE=moopapi BRANCH=4.x
+  - GITHUB_REPOSITORY=drupal-botcha DRUPAL_VERSION=6.x PROFILE=default DRUPAL_MODULE=botcha BRANCH=4.x
   # 7.x
   # 7.x-1.x
-  - GITHUB_REPOSITORY=drupal-moopapi DRUPAL_VERSION=7.x PROFILE=standard DRUPAL_MODULE=moopapi BRANCH=1.x
+  - GITHUB_REPOSITORY=drupal-botcha DRUPAL_VERSION=7.x PROFILE=standard DRUPAL_MODULE=botcha BRANCH=1.x
   # (obsolete) 7.x-2.x
-  #- GITHUB_REPOSITORY=drupal-moopapi DRUPAL_VERSION=7.x PROFILE=standard DRUPAL_MODULE=moopapi BRANCH=2.x
+  #- GITHUB_REPOSITORY=drupal-botcha DRUPAL_VERSION=7.x PROFILE=standard DRUPAL_MODULE=botcha BRANCH=2.x
   # 7.x-3.x
-  - GITHUB_REPOSITORY=drupal-moopapi DRUPAL_VERSION=7.x PROFILE=standard DRUPAL_MODULE=moopapi BRANCH=3.x
+  - GITHUB_REPOSITORY=drupal-botcha DRUPAL_VERSION=7.x PROFILE=standard DRUPAL_MODULE=botcha BRANCH=3.x
   # 7.x-4.x
-  - GITHUB_REPOSITORY=drupal-moopapi DRUPAL_VERSION=7.x PROFILE=standard DRUPAL_MODULE=moopapi BRANCH=4.x
+  - GITHUB_REPOSITORY=drupal-botcha DRUPAL_VERSION=7.x PROFILE=standard DRUPAL_MODULE=botcha BRANCH=4.x
 
 before_script:
  - mysql -e 'create database drupal;'
