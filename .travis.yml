@@ -7,10 +7,25 @@ mysql:
   username: root
   encoding: utf8
 
-# This is for make code abstract, facilitating copy-pasting.
 env:
-  - GITHUB_REPOSITORY=drupal-botcha DRUPAL_VERSION=7.x PROFILE=standard DRUPAL_MODULE=botcha
-  - GITHUB_REPOSITORY=drupal-botcha DRUPAL_VERSION=6.x PROFILE=default DRUPAL_MODULE=botcha
+  # 6.x
+  # 6.x-1.x
+  - GITHUB_REPOSITORY=drupal-moopapi DRUPAL_VERSION=6.x PROFILE=default DRUPAL_MODULE=moopapi BRANCH=1.x
+  # (obsolete) 6.x-2.x
+  #- GITHUB_REPOSITORY=drupal-moopapi DRUPAL_VERSION=6.x PROFILE=default DRUPAL_MODULE=moopapi BRANCH=2.x
+  # 6.x-3.x
+  - GITHUB_REPOSITORY=drupal-moopapi DRUPAL_VERSION=6.x PROFILE=default DRUPAL_MODULE=moopapi BRANCH=3.x
+  # 6.x-4.x
+  - GITHUB_REPOSITORY=drupal-moopapi DRUPAL_VERSION=6.x PROFILE=default DRUPAL_MODULE=moopapi BRANCH=4.x
+  # 7.x
+  # 7.x-1.x
+  - GITHUB_REPOSITORY=drupal-moopapi DRUPAL_VERSION=7.x PROFILE=standard DRUPAL_MODULE=moopapi BRANCH=1.x
+  # (obsolete) 7.x-2.x
+  #- GITHUB_REPOSITORY=drupal-moopapi DRUPAL_VERSION=7.x PROFILE=standard DRUPAL_MODULE=moopapi BRANCH=2.x
+  # 7.x-3.x
+  - GITHUB_REPOSITORY=drupal-moopapi DRUPAL_VERSION=7.x PROFILE=standard DRUPAL_MODULE=moopapi BRANCH=3.x
+  # 7.x-4.x
+  - GITHUB_REPOSITORY=drupal-moopapi DRUPAL_VERSION=7.x PROFILE=standard DRUPAL_MODULE=moopapi BRANCH=4.x
 
 before_script:
  - mysql -e 'create database drupal;'
@@ -18,51 +33,24 @@ before_script:
  - pyrus install drush/drush-devel
  - phpenv rehash
  - cd ..
- # Get Patchwork library (it is required by Moopapi).
- - wget --output-document=patchwork.zip https://github.com/antecedent/patchwork/archive/master.zip
- - ls -la
- - unzip patchwork.zip
- - ls -la
- - mv patchwork-master patchwork
- - ls patchwork -la
- # Prefer "git clone" to "drush dl", because drupal.org builds packages too slowly.
- #- git clone --branch $DRUPAL_VERSION-4.x http://git.drupal.org/project/$DRUPAL_MODULE.git
- # --no-cache is must-have due to http://drupal.org/node/1630220
- #- drush dl drupal-$DRUPAL_VERSION --no-cache
  # Prepare Drupal.
  - mkdir drupal
  - cd drupal
  - cp ../$GITHUB_REPOSITORY/$DRUPAL_VERSION/drupal.make drupal.make
  - drush make drupal.make .
- # Discover newly downloaded directories.
+ # Discover newly downloaded directory.
  - ls -la
- #- cd drupal-*
- # make sure we are inside Drupal root.
- #- ls -la
  # Install Drupal.
  - drush si $PROFILE --db-url=mysql://root:@localhost/drupal --yes
  # Prepare Simpletest.
  - sh -c "if [ '$DRUPAL_VERSION' = '6.x' ]; then cp sites/all/modules/simpletest/run-tests.sh scripts/run-tests.sh; fi"
  - drush en simpletest --yes
- # Prepare library.
- - mkdir sites/all/libraries
- - cp -R ../patchwork sites/all/libraries/patchwork
  # Prepare required modules.
- - cp ../$GITHUB_REPOSITORY/$DRUPAL_VERSION/$DRUPAL_MODULE.make $DRUPAL_MODULE.make
+ - cp ../$GITHUB_REPOSITORY/$DRUPAL_VERSION/$BRANCH/$DRUPAL_MODULE.make $DRUPAL_MODULE.make
  - drush make $DRUPAL_MODULE.make . --no-core
- #- drush dl libraries --dev --no-cache
- - drush en libraries --yes
- #- ls sites/all/libraries/patchwork -la
- #- drush dl moopapi --dev --no-cache
- - drush en moopapi --yes
- # See the reason above.
- #- drush dl $DRUPAL_MODULE --dev --no-cache
- #- cp -R ../$DRUPAL_MODULE sites/all/modules/$DRUPAL_MODULE
- # Download major-version-independent "library".
- - drush make sites/all/modules/$DRUPAL_MODULE/$DRUPAL_MODULE.make . --no-core
- # For debugging: check which versions we use.
- # @todo Avoid hardcode.
- - drush pm-info libraries moopapi botcha_base $DRUPAL_MODULE
+ # Prepare the module.
+ # No need: it is done recursively by drush make.
+ #- drush make sites/all/modules/$DRUPAL_MODULE/$DRUPAL_MODULE.make . --no-core
  - drush en $DRUPAL_MODULE --yes
  - drush cc all
  - drush runserver --server=builtin 8080 &
@@ -72,12 +60,10 @@ before_script:
  # Create a directory to output results.
  - mkdir results
 
- # @todo Implement Selenium tests launch.
- # @todo Use variables instead of hardcode.
-script: php scripts/run-tests.sh --php ~/.phpenv/versions/5.4.16/bin/php --url 'http://127.0.0.1:8080' --verbose --file sites/all/modules/botcha_base/tests/$DRUPAL_MODULE.simpletest.test
- #drush test-run SimpleTest --xml=results --uri=http://127.0.0.1:8080
+script: php scripts/run-tests.sh --php ~/.phpenv/versions/5.4.16/bin/php --url 'http://127.0.0.1:8080' --verbose --file sites/all/modules/$DRUPAL_MODULE/tests/$DRUPAL_MODULE.test
+ #drush test-run --xml --file=sites/all/modules/moopapi/core/simpletest.test --uri=http://127.0.0.1:8080
 
 after_script:
  - cd results
  - ls -la
-# Switch to run-tests.sh again.
+# Trigger testing of changes at drupal.org
