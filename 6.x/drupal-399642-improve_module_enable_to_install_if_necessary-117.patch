@@ -1,4 +1,4 @@
-From 537ce81ad2b9fac936cea6b20fa76325c8fdc9e6 Mon Sep 17 00:00:00 2001
+From 9f140f3c3bfca643aa3067a30620bdb0f460932a Mon Sep 17 00:00:00 2001
 From: PatchRanger <Staratel@1209848.no-reply.drupal.org>
 Date: Mon, 5 Aug 2013 10:09:29 +0700
 Subject: [PATCH] Issue #399642 by pounard, boombatower, sndev, carlos8f,
@@ -8,8 +8,8 @@ Subject: [PATCH] Issue #399642 by pounard, boombatower, sndev, carlos8f,
 
 ---
  includes/install.inc |   25 +++++--------------------
- includes/module.inc  |   35 +++++++++++++++++++++++++++++++++++
- 2 files changed, 40 insertions(+), 20 deletions(-)
+ includes/module.inc  |   34 ++++++++++++++++++++++++++++++++++
+ 2 files changed, 39 insertions(+), 20 deletions(-)
 
 diff --git a/includes/install.inc b/includes/install.inc
 index 2ee29ba..c54bcb7 100644
@@ -55,10 +55,10 @@ index 2ee29ba..c54bcb7 100644
    }
  }
 diff --git a/includes/module.inc b/includes/module.inc
-index 7958367..4b70a4d 100644
+index 7958367..b939285 100644
 --- a/includes/module.inc
 +++ b/includes/module.inc
-@@ -310,6 +310,38 @@ function module_load_all_includes($type, $name = NULL) {
+@@ -310,6 +310,37 @@ function module_load_all_includes($type, $name = NULL) {
   *   An array of module names.
   */
  function module_enable($module_list) {
@@ -90,14 +90,13 @@ index 7958367..4b70a4d 100644
 +    }
 +  } while ($moved);
 +  // Sort by weight.
-+  $module_list = array_flip($module_list);
 +  asort($module_list);
-+  $module_list = array_values($module_list);
++  $module_list = array_keys($module_list);
 +
    $invoke_modules = array();
    foreach ($module_list as $module) {
      $existing = db_fetch_object(db_query("SELECT status FROM {system} WHERE type = '%s' AND name = '%s'", 'module', $module));
-@@ -329,7 +361,10 @@ function module_enable($module_list) {
+@@ -329,7 +360,10 @@ function module_enable($module_list) {
    }
  
    foreach ($invoke_modules as $module) {
