@@ -1,4 +1,4 @@
-From 94003d39d9d3a7eed88bde0e32e7db707e06d3c3 Mon Sep 17 00:00:00 2001
+From 9ba26354270cdaa55488a345087804e815533a5b Mon Sep 17 00:00:00 2001
 From: PatchRanger <Staratel@1209848.no-reply.drupal.org>
 Date: Mon, 5 Aug 2013 10:09:29 +0700
 Subject: [PATCH] Issue #399642 by pounard, boombatower, sndev, carlos8f,
@@ -7,12 +7,12 @@ Subject: [PATCH] Issue #399642 by pounard, boombatower, sndev, carlos8f,
  necessary
 
 ---
- includes/install.inc |   20 +-------------------
- includes/module.inc  |   34 ++++++++++++++++++++++++++++++++++
- 2 files changed, 35 insertions(+), 19 deletions(-)
+ includes/install.inc |   21 ++-------------------
+ includes/module.inc  |   35 +++++++++++++++++++++++++++++++++++
+ 2 files changed, 37 insertions(+), 19 deletions(-)
 
 diff --git a/includes/install.inc b/includes/install.inc
-index 2ee29ba..c3d0b50 100644
+index 2ee29ba..22c8054 100644
 --- a/includes/install.inc
 +++ b/includes/install.inc
 @@ -308,26 +308,8 @@ function drupal_verify_profile($profile, $locale) {
@@ -43,8 +43,16 @@ index 2ee29ba..c3d0b50 100644
  }
  
  /**
+@@ -343,6 +325,7 @@ function _drupal_install_module($module) {
+     module_invoke($module, 'install');
+     $versions = drupal_get_schema_versions($module);
+     drupal_set_installed_schema_version($module, $versions ? max($versions) : SCHEMA_INSTALLED);
++    watchdog('system', '%module module installed.', array('%module' => $module), WATCHDOG_INFO);
+     return TRUE;
+   }
+ }
 diff --git a/includes/module.inc b/includes/module.inc
-index 7958367..9492e10 100644
+index 7958367..65a95bd 100644
 --- a/includes/module.inc
 +++ b/includes/module.inc
 @@ -310,6 +310,40 @@ function module_load_all_includes($type, $name = NULL) {
@@ -88,6 +96,14 @@ index 7958367..9492e10 100644
    $invoke_modules = array();
    foreach ($module_list as $module) {
      $existing = db_fetch_object(db_query("SELECT status FROM {system} WHERE type = '%s' AND name = '%s'", 'module', $module));
+@@ -330,6 +364,7 @@ function module_enable($module_list) {
+ 
+   foreach ($invoke_modules as $module) {
+     module_invoke($module, 'enable');
++    watchdog('system', '%module module enabled.', array('%module' => $module), WATCHDOG_INFO);
+     // Check if node_access table needs rebuilding.
+     // We check for the existence of node_access_needs_rebuild() since
+     // at install time, module_enable() could be called while node.module
 -- 
 1.7.9.5
 
