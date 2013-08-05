@@ -1,4 +1,4 @@
-From 9ba26354270cdaa55488a345087804e815533a5b Mon Sep 17 00:00:00 2001
+From 3df2089cb56e0163787f6480495b088fed1b04a0 Mon Sep 17 00:00:00 2001
 From: PatchRanger <Staratel@1209848.no-reply.drupal.org>
 Date: Mon, 5 Aug 2013 10:09:29 +0700
 Subject: [PATCH] Issue #399642 by pounard, boombatower, sndev, carlos8f,
@@ -7,15 +7,15 @@ Subject: [PATCH] Issue #399642 by pounard, boombatower, sndev, carlos8f,
  necessary
 
 ---
- includes/install.inc |   21 ++-------------------
- includes/module.inc  |   35 +++++++++++++++++++++++++++++++++++
- 2 files changed, 37 insertions(+), 19 deletions(-)
+ includes/install.inc |   25 +++++--------------------
+ includes/module.inc  |   36 ++++++++++++++++++++++++++++++++++++
+ 2 files changed, 41 insertions(+), 20 deletions(-)
 
 diff --git a/includes/install.inc b/includes/install.inc
-index 2ee29ba..22c8054 100644
+index 2ee29ba..c54bcb7 100644
 --- a/includes/install.inc
 +++ b/includes/install.inc
-@@ -308,26 +308,8 @@ function drupal_verify_profile($profile, $locale) {
+@@ -308,26 +308,10 @@ function drupal_verify_profile($profile, $locale) {
   *   The modules to install.
   */
  function drupal_install_modules($module_list = array()) {
@@ -38,12 +38,15 @@ index 2ee29ba..22c8054 100644
 -  asort($module_list);
 -  $module_list = array_keys($module_list);
 -  array_filter($module_list, '_drupal_install_module');
-   module_enable($module_list);
+-  module_enable($module_list);
++  if (!empty($module_list)) {
++    module_enable($module_list);
++  }
 +  return TRUE;
  }
  
  /**
-@@ -343,6 +325,7 @@ function _drupal_install_module($module) {
+@@ -343,6 +327,7 @@ function _drupal_install_module($module) {
      module_invoke($module, 'install');
      $versions = drupal_get_schema_versions($module);
      drupal_set_installed_schema_version($module, $versions ? max($versions) : SCHEMA_INSTALLED);
@@ -52,10 +55,10 @@ index 2ee29ba..22c8054 100644
    }
  }
 diff --git a/includes/module.inc b/includes/module.inc
-index 7958367..65a95bd 100644
+index 7958367..47d006d 100644
 --- a/includes/module.inc
 +++ b/includes/module.inc
-@@ -310,6 +310,40 @@ function module_load_all_includes($type, $name = NULL) {
+@@ -310,6 +310,41 @@ function module_load_all_includes($type, $name = NULL) {
   *   An array of module names.
   */
  function module_enable($module_list) {
@@ -86,8 +89,9 @@ index 7958367..65a95bd 100644
 +      }
 +    }
 +  } while ($moved);
++  $module_list = array_flip($module_list);
 +  asort($module_list);
-+  $module_list = array_keys($module_list);
++  $module_list = array_values($module_list);
 +  // Required for _drupal_install_module().
 +  include_once './includes/install.inc';
 +  // Loop through the module list to install if necessary.
@@ -96,7 +100,7 @@ index 7958367..65a95bd 100644
    $invoke_modules = array();
    foreach ($module_list as $module) {
      $existing = db_fetch_object(db_query("SELECT status FROM {system} WHERE type = '%s' AND name = '%s'", 'module', $module));
-@@ -330,6 +364,7 @@ function module_enable($module_list) {
+@@ -330,6 +365,7 @@ function module_enable($module_list) {
  
    foreach ($invoke_modules as $module) {
      module_invoke($module, 'enable');
