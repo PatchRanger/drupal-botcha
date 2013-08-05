@@ -1,4 +1,4 @@
-From 9f140f3c3bfca643aa3067a30620bdb0f460932a Mon Sep 17 00:00:00 2001
+From a4281c9b5e8e4585f99f627c980b17970ad534e7 Mon Sep 17 00:00:00 2001
 From: PatchRanger <Staratel@1209848.no-reply.drupal.org>
 Date: Mon, 5 Aug 2013 10:09:29 +0700
 Subject: [PATCH] Issue #399642 by pounard, boombatower, sndev, carlos8f,
@@ -7,12 +7,12 @@ Subject: [PATCH] Issue #399642 by pounard, boombatower, sndev, carlos8f,
  necessary
 
 ---
- includes/install.inc |   25 +++++--------------------
- includes/module.inc  |   34 ++++++++++++++++++++++++++++++++++
- 2 files changed, 39 insertions(+), 20 deletions(-)
+ includes/install.inc |   24 ++++--------------------
+ includes/module.inc  |   33 +++++++++++++++++++++++++++++++++
+ 2 files changed, 37 insertions(+), 20 deletions(-)
 
 diff --git a/includes/install.inc b/includes/install.inc
-index 2ee29ba..c54bcb7 100644
+index 2ee29ba..dce8c5d 100644
 --- a/includes/install.inc
 +++ b/includes/install.inc
 @@ -308,26 +308,10 @@ function drupal_verify_profile($profile, $locale) {
@@ -46,16 +46,8 @@ index 2ee29ba..c54bcb7 100644
  }
  
  /**
-@@ -343,6 +327,7 @@ function _drupal_install_module($module) {
-     module_invoke($module, 'install');
-     $versions = drupal_get_schema_versions($module);
-     drupal_set_installed_schema_version($module, $versions ? max($versions) : SCHEMA_INSTALLED);
-+    watchdog('system', '%module module installed.', array('%module' => $module), WATCHDOG_INFO);
-     return TRUE;
-   }
- }
 diff --git a/includes/module.inc b/includes/module.inc
-index 7958367..b939285 100644
+index 7958367..1f7cfde 100644
 --- a/includes/module.inc
 +++ b/includes/module.inc
 @@ -310,6 +310,37 @@ function module_load_all_includes($type, $name = NULL) {
@@ -96,17 +88,15 @@ index 7958367..b939285 100644
    $invoke_modules = array();
    foreach ($module_list as $module) {
      $existing = db_fetch_object(db_query("SELECT status FROM {system} WHERE type = '%s' AND name = '%s'", 'module', $module));
-@@ -329,7 +360,10 @@ function module_enable($module_list) {
+@@ -329,6 +360,8 @@ function module_enable($module_list) {
    }
  
    foreach ($invoke_modules as $module) {
 +    // Install if necessary.
 +    _drupal_install_module($module);
      module_invoke($module, 'enable');
-+    watchdog('system', '%module module enabled.', array('%module' => $module), WATCHDOG_INFO);
      // Check if node_access table needs rebuilding.
      // We check for the existence of node_access_needs_rebuild() since
-     // at install time, module_enable() could be called while node.module
 -- 
 1.7.9.5
 
