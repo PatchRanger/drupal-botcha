@@ -51,7 +51,8 @@ before_script:
  # Prepare the module.
  # No need: it is done recursively by drush make.
  #- drush make sites/all/modules/$DRUPAL_MODULE/$DRUPAL_MODULE.make . --no-core
- - drush en $DRUPAL_MODULE --yes
+ # Drush in D6 doesn't handle dependencies right.
+ - sh -c "if [ '$DRUPAL_VERSION' = '7.x' ]; then drush en $DRUPAL_MODULE --yes; else drush php-eval \"module_enable('$DRUPAL_MODULE');\"; fi"
  - drush cc all
  - drush runserver --server=builtin 8080 &
  - sleep 4
