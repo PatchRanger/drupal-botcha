@@ -1,0 +1,93 @@
+From 94003d39d9d3a7eed88bde0e32e7db707e06d3c3 Mon Sep 17 00:00:00 2001
+From: PatchRanger <Staratel@1209848.no-reply.drupal.org>
+Date: Mon, 5 Aug 2013 10:09:29 +0700
+Subject: [PATCH] Issue #399642 by pounard, boombatower, sndev, carlos8f,
+ moshe weitzman, webchick, sun, chx, Dries, JacobSingh,
+ PatchRanger: Improve module_enable() to install if
+ necessary
+
+---
+ includes/install.inc |   20 +-------------------
+ includes/module.inc  |   34 ++++++++++++++++++++++++++++++++++
+ 2 files changed, 35 insertions(+), 19 deletions(-)
+
+diff --git a/includes/install.inc b/includes/install.inc
+index 2ee29ba..c3d0b50 100644
+--- a/includes/install.inc
++++ b/includes/install.inc
+@@ -308,26 +308,8 @@ function drupal_verify_profile($profile, $locale) {
+  *   The modules to install.
+  */
+ function drupal_install_modules($module_list = array()) {
+-  $files = module_rebuild_cache();
+-  $module_list = array_flip(array_values($module_list));
+-  do {
+-    $moved = FALSE;
+-    foreach ($module_list as $module => $weight) {
+-      $file = $files[$module];
+-      if (isset($file->info['dependencies']) && is_array($file->info['dependencies'])) {
+-        foreach ($file->info['dependencies'] as $dependency) {
+-          if (isset($module_list[$dependency]) && $module_list[$module] < $module_list[$dependency] +1) {
+-            $module_list[$module] = $module_list[$dependency] +1;
+-            $moved = TRUE;
+-          }
+-        }
+-      }
+-    }
+-  } while ($moved);
+-  asort($module_list);
+-  $module_list = array_keys($module_list);
+-  array_filter($module_list, '_drupal_install_module');
+   module_enable($module_list);
++  return TRUE;
+ }
+ 
+ /**
+diff --git a/includes/module.inc b/includes/module.inc
+index 7958367..9492e10 100644
+--- a/includes/module.inc
++++ b/includes/module.inc
+@@ -310,6 +310,40 @@ function module_load_all_includes($type, $name = NULL) {
+  *   An array of module names.
+  */
+ function module_enable($module_list) {
++  $files = module_rebuild_cache();
++  $module_list = array_flip(array_values($module_list));
++  do {
++    $moved = FALSE;
++    foreach ($module_list as $module => $weight) {
++      $file = $files[$module];
++      if (isset($file->info['dependencies']) && is_array($file->info['dependencies'])) {
++        foreach ($file->info['dependencies'] as $dependency) {
++          if (!isset($module_list[$dependency])) {
++            if (!isset($files[$dependency])) {
++              // A dependency was not found, abort installation.
++              return FALSE;
++            }
++            elseif (!$files[$dependency]->status) {
++              // Add dependencies to $module_list and install them first.
++              $module_list[$dependency] = $weight - 1;
++              $moved = TRUE;
++            }
++          }
++          elseif ($module_list[$module] < $module_list[$dependency] + 1) {
++            $module_list[$module] = $module_list[$dependency] + 1;
++            $moved = TRUE;
++          }
++        }
++      }
++    }
++  } while ($moved);
++  asort($module_list);
++  $module_list = array_keys($module_list);
++  // Required for _drupal_install_module().
++  include_once './includes/install.inc';
++  // Loop through the module list to install if necessary.
++  array_filter($module_list, '_drupal_install_module');
++
+   $invoke_modules = array();
+   foreach ($module_list as $module) {
+     $existing = db_fetch_object(db_query("SELECT status FROM {system} WHERE type = '%s' AND name = '%s'", 'module', $module));
+-- 
+1.7.9.5
+
