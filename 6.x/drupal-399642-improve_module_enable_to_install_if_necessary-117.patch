@@ -1,4 +1,4 @@
-From a4281c9b5e8e4585f99f627c980b17970ad534e7 Mon Sep 17 00:00:00 2001
+From 51c6e4f3d37e835835746ef27b3f004f77abf6ef Mon Sep 17 00:00:00 2001
 From: PatchRanger <Staratel@1209848.no-reply.drupal.org>
 Date: Mon, 5 Aug 2013 10:09:29 +0700
 Subject: [PATCH] Issue #399642 by pounard, boombatower, sndev, carlos8f,
@@ -12,7 +12,7 @@ Subject: [PATCH] Issue #399642 by pounard, boombatower, sndev, carlos8f,
  2 files changed, 37 insertions(+), 20 deletions(-)
 
 diff --git a/includes/install.inc b/includes/install.inc
-index 2ee29ba..dce8c5d 100644
+index 2ee29ba..532c8b5 100644
 --- a/includes/install.inc
 +++ b/includes/install.inc
 @@ -308,26 +308,10 @@ function drupal_verify_profile($profile, $locale) {
@@ -40,7 +40,7 @@ index 2ee29ba..dce8c5d 100644
 -  array_filter($module_list, '_drupal_install_module');
 -  module_enable($module_list);
 +  if (!empty($module_list)) {
-+    module_enable($module_list);
++    module_enable((array)$module_list);
 +  }
 +  return TRUE;
  }
